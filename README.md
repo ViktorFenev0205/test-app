@@ -5,5 +5,3 @@
 To run app u should execute `npm i` and `npm start`
 
 Done
-
-Press `Option` or `Alt` to see all tooltips
