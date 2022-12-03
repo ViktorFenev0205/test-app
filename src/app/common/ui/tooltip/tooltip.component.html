@@ -1,0 +1,19 @@
+<div
+  class="tooltip"
+  [ngClass]="['tooltip--'+position]"
+  [class.tooltip--visible]="visible"
+  [style.left]="left + 'px'"
+  [style.top]="top + 'px'"
+>
+  <div
+    class="content"
+    [innerHTML]="tooltip | safeHtml"
+  ></div>
+
+  <div class="hotkeys">
+    <div class="hotkey" *ngFor="let hotkey of hotkeys">
+      {{hotkey}}
+    </div>
+  </div>
+</div>
+
