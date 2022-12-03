@@ -1,9 +1,18 @@
+<div style="color: white">Current hotkey: {{GLOBAL_HOTKEY.key}}</div>
+
+<button class="change-hotkey-button" (click)="changeHotkey()">{{buttonText}}</button>
+<button class="change-hotkey-button" (click)="changeHotkey(true)">Apply default</button>
+
 <div class="container">
+
+<!--  [isOpen] option can be used also-->
   <div class="block"
        [tooltip]="IMAGE_TOOLTIP"
        [position]="TooltipPosition.LEFT"
        [hotkeys]="[TooltipHotkey.BACK_SLASH, TooltipHotkey.ALT, TooltipHotkey.META]"
-  ></div><div class="block"
+  ></div>
+
+  <div class="block"
        [tooltip]="IMAGE_TOOLTIP"
        [position]="TooltipPosition.ABOVE"
        [hotkeys]="[TooltipHotkey.BACK_SLASH, TooltipHotkey.ALT, TooltipHotkey.META]"

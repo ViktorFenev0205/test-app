@@ -3,18 +3,20 @@ import {
   Directive,
   ElementRef,
   HostListener,
-  Input,
+  Input, OnChanges, SimpleChanges,
   ViewContainerRef
 } from '@angular/core';
 import { TooltipComponent } from "./tooltip.component";
 import { TooltipHotkey, TooltipPosition } from "./tooltip.enums";
+import { GLOBAL_HOTKEY } from "../constants";
 
 @Directive({
   selector: '[tooltip]'
 })
-export class TooltipDirective {
+export class TooltipDirective implements OnChanges {
 
-  @Input() tooltip = '';
+  @Input() tooltip: any = null;
+  @Input() isOpen = false;
   @Input() position: TooltipPosition = TooltipPosition.DEFAULT;
   @Input() hotkeys: TooltipHotkey[] = [];
 
@@ -22,8 +24,15 @@ export class TooltipDirective {
 
   constructor(
     private elementRef: ElementRef,
-    private viewContainerRef: ViewContainerRef
+    private viewContainerRef: ViewContainerRef,
   ) {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    const isOpenByDefault = changes['isOpen']?.currentValue;
+    if (isOpenByDefault) {
+      this.initializeTooltip();
+    }
   }
 
   @HostListener('mouseenter')
@@ -31,14 +40,18 @@ export class TooltipDirective {
     this.initializeTooltip();
   }
 
-  @HostListener('document:keydown.alt')
-  onKeydownEnter(): void {
-    this.initializeTooltip();
+  @HostListener('document:keydown', ['$event'])
+  onKeydownEnter(event: KeyboardEvent): void {
+    if (event.key === GLOBAL_HOTKEY.key) {
+      this.initializeTooltip();
+    }
   }
 
-  @HostListener('document:keyup.alt')
-  onKeyupEnter(): void {
-    this.destroy();
+  @HostListener('document:keyup', ['$event'])
+  onKeyupEnter(event: KeyboardEvent): void {
+    if (event.key === GLOBAL_HOTKEY.key) {
+      this.destroy();
+    }
   }
 
   @HostListener('mouseleave')
@@ -46,14 +59,14 @@ export class TooltipDirective {
     this.destroy();
   }
 
-  private initializeTooltip() {
+  private initializeTooltip(): void {
     if (this.componentRef === null) {
       this.componentRef = this.viewContainerRef.createComponent(TooltipComponent);
       this.setTooltipComponentProperties();
     }
   }
 
-  private setTooltipComponentProperties() {
+  private setTooltipComponentProperties(): void {
     if (this.componentRef !== null) {
       this.componentRef.instance.tooltip = this.tooltip;
       this.componentRef.instance.position = this.position;
