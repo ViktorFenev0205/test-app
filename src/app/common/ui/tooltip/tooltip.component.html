@@ -5,10 +5,9 @@
   [style.left]="left + 'px'"
   [style.top]="top + 'px'"
 >
-  <div
-    class="content"
-    [innerHTML]="tooltip | safeHtml"
-  ></div>
+  <div class="content">
+    <ng-container *ngComponentOutlet="tooltip"></ng-container>
+  </div>
 
   <div class="hotkeys">
     <div class="hotkey" *ngFor="let hotkey of hotkeys">
